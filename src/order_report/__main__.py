@@ -24,30 +24,44 @@ def configure_logging() -> None:
 def main() -> None:
     configure_logging()
     config = ReportConfig()
-    orders = load_orders(config.input_file)
 
-    validate_orders(orders)
-    prepared = prepare_orders(orders)
+    try:
+        orders = load_orders(config.input_file)
+        validate_orders(orders)
+        prepared = prepare_orders(orders)
 
-    save_report(
-        build_overview(prepared),
-        config.output_folder / config.overview_file,
-    )
+        save_report(
+            build_overview(prepared),
+            config.output_folder / config.overview_file,
+        )
 
-    save_report(
-        summarize_sales(prepared, "product_category"),
-        config.output_folder / config.sales_by_category_file,
-    )    
+        save_report(
+            summarize_sales(prepared, "product_category"),
+            config.output_folder / config.sales_by_category_file,
+        )
 
-    save_report(
-        summarize_sales(prepared, "region"),
-        config.output_folder / config.sales_by_region_file,
-    )
+        save_report(
+            summarize_sales(prepared, "region"),
+            config.output_folder / config.sales_by_region_file,
+        )
 
-    save_report(
-        summarize_returns(prepared, "product_category"),
-        config.output_folder / config.returns_by_category_file,
-    )
+        save_report(
+            summarize_returns(prepared, "product_category"),
+            config.output_folder / config.returns_by_category_file,
+        )
+        logger.info("Report finished")
+    except FileNotFoundError:
+        logger.error("Input file not found: %s", config.input_file)
+        raise SystemExit(1)
+
+    except ValueError as error:
+        logger.error("Validation failed: %s", error)
+        raise SystemExit(1)
+
+    except Exception:
+        logger.exception("Unexpected error building the report")
+        raise
+
 
 if __name__ == "__main__":
     main()
