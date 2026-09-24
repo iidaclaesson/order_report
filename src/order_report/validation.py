@@ -21,3 +21,4 @@ def validate_orders(orders: pd.DataFrame) -> None:
     if missing_columns:
         raise ValueError(f"Missing columns: {', '.join(sorted(missing_columns))}")
     logger.info("Validation successful: All %s required columns are present.", len(REQUIRED_COLUMNS))
+    

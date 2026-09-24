@@ -5,7 +5,17 @@ logger = logging.getLogger(__name__)
 
 def prepare_orders(orders: pd.DataFrame) -> pd.DataFrame:
     prepared = orders.copy()
-    prepared["region"] = prepared["region"].fillna("Unknown").astype(str).str.strip().str.title()
+    for column in ["region", "product_category", "quantity", "unit_price", "discount", "returned"]:
+        missing = int(prepared[column].isna().sum())
+        if missing: 
+            logger.warning("Missing values in %s: %s", column, missing)
+    prepared["region"] = (
+        prepared["region"]
+        .fillna("Unknown")
+        .astype(str)
+        .str.strip()
+        .str.title()
+    )
     prepared["product_category"] = (
         prepared["product_category"]
         .fillna("Unknown")
@@ -14,20 +24,19 @@ def prepare_orders(orders: pd.DataFrame) -> pd.DataFrame:
         .str.title()
     )
 
-    prepared["quantity"] = pd.to_numeric(
-        prepared["quantity"], errors="coerce"
-    ).fillna(1)
+    prepared["quantity"] = pd.to_numeric(prepared["quantity"], errors="coerce")
+    prepared["quantity"] = prepared["quantity"].fillna(1)
 
     prepared["unit_price"] = pd.to_numeric(
         prepared["unit_price"], errors="coerce"
     )
+
     prepared["unit_price"] = prepared["unit_price"].fillna(
         prepared["unit_price"].median()
     )
 
-    prepared["discount"] = pd.to_numeric(
-        prepared["discount"], errors="coerce"
-    ).fillna(0)
+    prepared["discount"] = pd.to_numeric(prepared["discount"], errors="coerce")
+    prepared["discount"] = prepared["discount"].fillna(0)
 
     prepared["returned"] = (
         prepared["returned"]
