@@ -10,7 +10,7 @@ Create and activate a virtual environment.
 
 ```
 pip install -r requirements.txt
-pip install -e.
+pip install -e .
 ```
 Installs pandas, pytest and makes `order_report` importable.
 
@@ -24,4 +24,35 @@ Creates four CSV reports in output/: overview, returns per category, sales by ca
 Run tests:
 ```
 python -m pytest
+```
+
+## Structure
+
+```
+
+order_report/
+    README.md
+    code_review.md
+    pyproject.toml
+    reflection.md
+    requiremends.txt
+    data/
+        orders.csv
+    output/
+        overview.csv
+        returns_by_category.csv
+        sales_by_category.csv
+        sales_by_region.csv
+    src/order_report/
+        __init__.py
+        __main__.py
+        config.py
+        loading.py
+        processing.py
+        reporting.py
+        validation.py
+    tests/
+        test_processing.py
+        test_validation.py
+    
 ```
