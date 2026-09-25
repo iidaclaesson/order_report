@@ -35,7 +35,7 @@ order_report/
     code_review.md
     pyproject.toml
     reflection.md
-    requiremends.txt
+    requirements.txt
     data/
         orders.csv
     output/
